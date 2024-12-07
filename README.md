@@ -1,13 +1,10 @@
-# Sample Hardhat Project
+# DIN Prototype
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Prototype of reward disbursement for the DIN system. Uses a commit-and-reveal scheme for scoring by validators.
 
-Try running some of the following tasks:
+## Testing
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
+```
+npm install
+npm run test
 ```
