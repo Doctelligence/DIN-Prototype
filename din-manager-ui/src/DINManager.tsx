@@ -3,8 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import DINManagerABI from './DINManagerABI.json'; // Import the ABI of the DINManager contract
 
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
+
 const DINManager: React.FC = () => {
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [provider, setProvider] = useState<ethers.Provider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [projectCount, setProjectCount] = useState<number>(0);
@@ -12,17 +18,8 @@ const DINManager: React.FC = () => {
   useEffect(() => {
     const init = async () => {
       if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your deployed contract address
-        const contract = new ethers.Contract(contractAddress, DINManagerABI, signer);
-
-        setProvider(provider);
-        setSigner(signer);
-        setContract(contract);
-
-        const projectCount = await contract.projectCount();
-        setProjectCount(projectCount.toNumber());
+        // 
+        // setProjectCount(projectCount.toNumber());
       } else {
         console.error("Ethereum object doesn't exist!");
       }
