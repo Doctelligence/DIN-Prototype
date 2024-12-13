@@ -32,20 +32,20 @@ describe("DINManager", function () {
         })
         it("creates a DIN project", async function() {
             const [alice, bob, charlie, dave, ...others] = await ethers.getSigners();
-            await din.connect(alice).createProject();
+            await din.connect(alice).createProject('Test Project 1');
             expect(await din.projectCount()).to.equal(1);
             expect((await din.projectInfo(0)).owner).to.equal(alice.address);
         })
         describe("project initialization", function() {
             beforeEach(async function() {
                 const [alice, ...others] = await ethers.getSigners();
-                await din.connect(alice).createProject();
+                await din.connect(alice).createProject('Test Project 2');
             })
 
             async function projectInfo(id: number) : Promise<any> {
                 const rawResult = await din.projectInfo(id);
 
-                const keys = ["owner", "active", "rewardToken", "contributorRewardAmount", "validatorRewardAmount", "validationCommitmentDeadline", "validationRevealDeadline", "numContributors", "numValidators", "totalScore", "totalSuccessfulValidations"];
+                const keys = ["owner", "name", "active", "rewardToken", "contributorRewardAmount", "validatorRewardAmount", "validationCommitmentDeadline", "validationRevealDeadline", "numContributors", "numValidators", "totalScore", "totalSuccessfulValidations"];
 
                 const result : any = {}
                 for (let i = 0; i < keys.length; i++) {
@@ -115,6 +115,7 @@ describe("DINManager", function () {
                 await din.connect(alice).startProject(0, await rewardToken.getAddress(), 1000, 500, validationCommitmentDeadline, validationRevealDeadline);
                 expect(await projectInfo(0)).to.deep.equal({
                     active: true,
+                    name: 'Test Project 2',
                     owner: alice.address,
                     rewardToken: await rewardToken.getAddress(),
                     contributorRewardAmount: 1000,
@@ -302,7 +303,7 @@ describe("DINManager", function () {
         describe("project execution", function() {
             beforeEach(async function() {
                 const [alice, bob, charlie, dave, eric, ...others] = await ethers.getSigners();
-                await din.connect(alice).createProject();
+                await din.connect(alice).createProject('Test Project 3');
                 await din.connect(alice).addContributors(0, [bob.address, charlie.address]);
                 await din.connect(alice).addValidators(0, [dave.address, eric.address]);
 
@@ -361,7 +362,7 @@ describe("DINManager", function () {
                 const newDIN = await ethers.getContractFactory("DINManager");
                 const din = await newDIN.deploy();
 
-                await din.connect(alice).createProject();
+                await din.connect(alice).createProject('Test Project 4');
 
                 const encoder = new ethers.AbiCoder();
                 const dataBob = encoder.encode(["bytes32", "uint256"], [ethers.encodeBytes32String("Secret1"), 10]);

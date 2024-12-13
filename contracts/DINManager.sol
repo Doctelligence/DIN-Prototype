@@ -14,6 +14,9 @@ contract DINManager {
         /// Address of the owner of the project
         address owner;
 
+        /// Name of the project
+        string name;
+
         /// Address of the contributors for the project
         address[] contributors;
 
@@ -79,8 +82,9 @@ contract DINManager {
     }
 
     /// @notice Creates a new DIN project
-    function createProject() public {
+    function createProject(string memory _name) public {
         projects[projectCount].owner = msg.sender;
+        projects[projectCount].name = _name;
         projectCount++;
     }
 
@@ -195,6 +199,7 @@ contract DINManager {
     /// @notice Returns the information of a project
     /// @param _projectId ID of the project
     /// @return owner Address of the owner of the project
+    /// @return name Name of the project
     /// @return active True if the project is active (started)
     /// @return rewardToken Address of the token used to reward the contributors and validators
     /// @return contributorRewardAmount Amount of tokens to reward the contributors
@@ -205,10 +210,11 @@ contract DINManager {
     /// @return numValidators Total number of validators
     /// @return totalScore Total score for the project
     /// @return totalSuccessfulValidations Total number of successful validations
-    function projectInfo(uint256 _projectId) external view returns (address owner, bool active, IERC20 rewardToken, uint256 contributorRewardAmount, uint256 validatorRewardAmount, uint256 validationCommitmentDeadline, uint256 validationRevealDeadline, uint256 numContributors, uint256 numValidators, uint256 totalScore, uint256 totalSuccessfulValidations) {
+    function projectInfo(uint256 _projectId) external view returns (address owner, string memory name, bool active, IERC20 rewardToken, uint256 contributorRewardAmount, uint256 validatorRewardAmount, uint256 validationCommitmentDeadline, uint256 validationRevealDeadline, uint256 numContributors, uint256 numValidators, uint256 totalScore, uint256 totalSuccessfulValidations) {
         DINProject storage project = projects[_projectId];
         return (
             project.owner,
+            project.name,
             project.active,
             project.rewardToken,
             project.contributorRewardAmount,
