@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test",
-    "deploy": "npx hardhat ignition deploy ignition/modules/DINManager.ts --network sepolia"
+    "deploy:manager": "npx hardhat ignition deploy ignition/modules/DINManager.ts --network sepolia",
+    "deploy:erc20": "npx hardhat ignition deploy ignition/modules/test/MockERC20.ts --network sepolia"
   },
   "keywords": [
     "din",
