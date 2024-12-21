@@ -228,6 +228,27 @@ contract DINManager {
         );
     }
 
+    /// @notice Returns an array with the IDs of the projects created by the owner
+    /// @param _owner Address of the owner
+    /// @return Array with the IDs of the projects created by the owner
+    function getProjectsByOwner(address _owner) external view returns (uint256[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 0; i < projectCount; i++) {
+            if (projects[i].owner == _owner) {
+                count++;
+            }
+        }
+        uint256[] memory result = new uint256[](count);
+        count = 0;
+        for (uint256 i = 0; i < projectCount; i++) {
+            if (projects[i].owner == _owner) {
+                result[count] = i;
+                count++;
+            }
+        }
+        return result;
+    }
+
     /// @notice Returns the contributor at the given index
     /// @param _projectId ID of the project
     /// @param _index Index of the contributor
