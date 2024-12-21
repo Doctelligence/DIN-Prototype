@@ -5,7 +5,6 @@ import {
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import hre from "hardhat";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 const ethers = hre.ethers;
 
@@ -26,6 +25,20 @@ describe("DINManager", function () {
     })
     describe("execution", function() {
         let din : hre.ethers.Contract;
+
+        async function projectInfo(id: number) : Promise<any> {
+            const rawResult = await din.projectInfo(id);
+
+            const keys = ["owner", "name", "active", "rewardToken", "contributorRewardAmount", "validatorRewardAmount", "validationCommitmentDeadline", "validationRevealDeadline", "numContributors", "numValidators", "totalScore", "totalSuccessfulValidations"];
+
+            const result : any = {}
+            for (let i = 0; i < keys.length; i++) {
+                result[keys[i]] = rawResult[i];
+            }
+
+            return result;
+        }
+
         beforeEach(async function() {
             const DIN = await ethers.getContractFactory("DINManager");
             din = await DIN.deploy();
@@ -41,19 +54,6 @@ describe("DINManager", function () {
                 const [alice, ...others] = await ethers.getSigners();
                 await din.connect(alice).createProject('Test Project 2');
             })
-
-            async function projectInfo(id: number) : Promise<any> {
-                const rawResult = await din.projectInfo(id);
-
-                const keys = ["owner", "name", "active", "rewardToken", "contributorRewardAmount", "validatorRewardAmount", "validationCommitmentDeadline", "validationRevealDeadline", "numContributors", "numValidators", "totalScore", "totalSuccessfulValidations"];
-
-                const result : any = {}
-                for (let i = 0; i < keys.length; i++) {
-                    result[keys[i]] = rawResult[i];
-                }
-
-                return result;
-            }
 
             it("adds contributors to a project", async function() {
                 const [alice, bob, charlie, dave, ...others] = await ethers.getSigners();
@@ -400,5 +400,24 @@ describe("DINManager", function () {
                 await expect(din.connect(dave).commitValidations(0, [bob.address, charlie.address], [encodedBob, encodedCharlie])).to.be.revertedWith("Validation commitment deadline has passed");
             })
         })
+
+        // Add tests for getProjectsByOwner function
+        describe("getProjectsByOwner", function () {
+            it("returns the correct project IDs for each owner", async function () {
+                const [alice, bob, charlie, dave, ...others] = await ethers.getSigners();
+
+                // Create projects
+                await din.connect(alice).createProject("Alice Project 1");
+                await din.connect(alice).createProject("Alice Project 2");
+                await din.connect(bob).createProject("Bob Project 1");
+                await din.connect(charlie).createProject("Charlie Project 1");
+
+                // Verify project IDs for each owner
+                expect(await din.getProjectsByOwner(alice.address)).to.deep.equal([0, 1]);
+                expect(await din.getProjectsByOwner(bob.address)).to.deep.equal([2]);
+                expect(await din.getProjectsByOwner(charlie.address)).to.deep.equal([3]);
+                expect(await din.getProjectsByOwner(dave.address)).to.deep.equal([]);
+            });
+        });
     })
 })
