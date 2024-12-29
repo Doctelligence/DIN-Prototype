@@ -82,6 +82,7 @@ contract DINManager {
     }
 
     /// @notice Creates a new DIN project
+    /// @param _name Name of the project
     function createProject(string memory _name) public {
         projects[projectCount].owner = msg.sender;
         projects[projectCount].name = _name;
@@ -226,27 +227,6 @@ contract DINManager {
             project.totalScore,
             project.totalSuccessfulValidations
         );
-    }
-
-    /// @notice Returns an array with the IDs of the projects created by the owner
-    /// @param _owner Address of the owner
-    /// @return Array with the IDs of the projects created by the owner
-    function getProjectsByOwner(address _owner) external view returns (uint256[] memory) {
-        uint256 count = 0;
-        for (uint256 i = 0; i < projectCount; i++) {
-            if (projects[i].owner == _owner) {
-                count++;
-            }
-        }
-        uint256[] memory result = new uint256[](count);
-        count = 0;
-        for (uint256 i = 0; i < projectCount; i++) {
-            if (projects[i].owner == _owner) {
-                result[count] = i;
-                count++;
-            }
-        }
-        return result;
     }
 
     /// @notice Returns the contributor at the given index

@@ -6,7 +6,11 @@
     "test": "npx hardhat test",
     "deploy:manager": "npx hardhat ignition deploy ignition/modules/DINManager.ts --network sepolia",
     "deploy:erc20": "npx hardhat ignition deploy ignition/modules/test/MockERC20.ts --network sepolia",
-    "deploy": "npm run deploy:manager && npm run deploy:erc20"
+    "deploy": "npm run deploy:manager && npm run deploy:erc20",
+    "deploy:local:manager": "npx hardhat ignition deploy ignition/modules/DINManager.ts --network localhost",
+    "deploy:local:erc20": "npx hardhat ignition deploy ignition/modules/test/MockERC20.ts --network localhost",
+    "deploy:local": "npm run deploy:local:manager && npm run deploy:local:erc20",
+    "mock": "npx hardhat node"
   },
   "keywords": [
     "din",
